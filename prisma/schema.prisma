@@ -1,0 +1,176 @@
+// С каким клиентам схема должна работать (для js)
+generator client {
+    provider = "prisma-client-js"
+}
+
+// Подклчюение бд 
+datasource db {
+    provider  = "postgresql"
+    url = env("POSTGRES_URL") // куда подключать постгресс
+    directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+// Создаём таблицу 
+model User {
+    // название тип unique увеличить-номер-при-добавлении
+    id Int @id @default(autoincrement())
+
+    fullName String
+    email    String    @unique
+    password String
+    role     UserRole  @default(USER)
+    verified DateTime?
+
+    provider String?
+    providerId String?
+
+    // one to one   
+    cart Cart?
+    order Order[]
+    verificationCode VerificationCode?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Category {
+    id       Int       @id @default(autoincrement())
+    name     String    @unique
+    // У категории может быть множество продуктов
+    products Product[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Product {
+    id Int @id @default(autoincrement())
+
+    name String 
+    imageUrl String
+    // связь с категорией (по categoryId ищем Category (references)) one to many
+    category Category @relation(fields: [categoryId], references: [id]) //для js чтобы он общался между таблицами
+    categoryId Int //для бд, потом будем использоваться в js (в prisma)
+    
+    // many to many
+    ingredients Ingredient[]
+
+    // many to one
+    variants ProductVariantion[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model ProductVariantion {
+    id Int @id @default(autoincrement())
+
+    price Int
+    size Int? //размер может отсутствовать 
+    pizzaType Int?
+    // у продукта (пиццы) может быть несколько вариантов готовки
+    product Product @relation(fields: [productId], references: [id])
+    productId Int
+
+    cartItems CartItem[]
+}
+
+model Ingredient {
+     id Int @id @default(autoincrement())
+
+     name String 
+     price Int
+     imageUrl String
+
+    product Product[]
+    cardItem CartItem[]
+
+    
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+
+model Cart {
+    id Int @id @default(autoincrement())
+
+    user User? @relation(fields: [userId], references: [id])
+    userId Int? @unique
+
+    // токен если не зарегистрированных пользователь использует корзину
+    token String
+
+    items CartItem[]
+
+    // значение по умолчанию - 0
+    totalAmount Int @default(0)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+
+model CartItem {
+    id Int @id @default(autoincrement())
+
+    ProductVariantion ProductVariantion @relation(fields: [productVarId], references: [id])
+    productVarId Int
+
+    cart Cart  @relation(fields: [cartId], references: [id])
+    cartId Int
+
+    quantity Int @default(1)
+
+    ingredients Ingredient[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Order {
+    id Int @id @default(autoincrement())
+
+    user User? @relation(fields: [userId], references: [id])
+    userId Int?
+
+    token String
+
+    totalAmount Int
+    status OrderStatus
+    paymentId String?
+
+    fullName String
+    email    String
+    phone    String
+    address  String
+    comment  String?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model VerificationCode {
+    id Int @id @default(autoincrement())
+    
+    user   User @relation(fields: [userId], references: [id])
+    userId Int  @unique
+
+    code String
+
+    createdAt DateTime @default(now())
+
+
+    
+    @@unique([userId, code]) //userId && code
+}
+
+enum OrderStatus {
+    PENDING
+    SUCCEEDED
+    CANCELLED
+}
+
+enum UserRole {
+    USER
+    ADMIN
+}
