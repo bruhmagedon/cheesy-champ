@@ -1,22 +1,18 @@
 "use client";
 import { cn } from "@/lib/utils";
 import { useCategoryStore } from "@/store/categories";
+import { Category } from "@prisma/client";
 import { useEffect } from "react";
 
 interface CategoriesProps {
+  categoriesElements: Category[];
   className?: string;
 }
 
-const categoriesElements = [
-  { id: 1, name: "Пиццы" },
-  { id: 2, name: "Завтрак" },
-  { id: 3, name: "Закуски" },
-  { id: 4, name: "Коктейли" },
-  { id: 5, name: "Напитки" },
-  { id: 6, name: "Десерты" },
-];
-
-export const Categories = ({ className }: CategoriesProps) => {
+export const Categories = ({
+  className,
+  categoriesElements,
+}: CategoriesProps) => {
   const activeCategotyId = useCategoryStore((state) => state.activeId);
 
   return (
