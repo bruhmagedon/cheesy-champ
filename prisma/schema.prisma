@@ -139,6 +139,8 @@ model Order {
     status OrderStatus
     paymentId String?
 
+    items Json
+
     fullName String
     email    String
     phone    String
