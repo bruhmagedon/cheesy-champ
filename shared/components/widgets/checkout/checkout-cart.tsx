@@ -28,6 +28,7 @@ export const CheckoutCart: React.FC<Props> = ({
   return (
     <WhiteBlock title="1. Корзина" className={className}>
       <div className="flex flex-col gap-5">
+        {/* TODO при изменении кол-ва товара не тригерить полностью скелетон, а только стиль на один элемент, который будет изменяться */}
         {loading
           ? [...Array(4)].map((_, index) => (
               <CheckoutItemSkeleton key={index} />

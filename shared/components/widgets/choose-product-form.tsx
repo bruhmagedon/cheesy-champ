@@ -1,5 +1,5 @@
 import { cn } from "@/shared/lib/utils";
-import { Title } from "./title";
+import { Title } from "../ui/title/title";
 import { Button } from "../ui";
 
 interface ChooseProductFormProps {

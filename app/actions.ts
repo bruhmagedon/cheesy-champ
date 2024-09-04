@@ -1,11 +1,14 @@
 "use server";
 
 import { prisma } from "@/prisma/prisma-client";
+import { PayOrderTemplate } from "@/shared/components/ui/email-templates/pay-order";
 import { CheckoutFormValues } from "@/shared/constants/checkout-form-schema";
+import { sendEmail } from "@/shared/lib/sendEmail";
 import { OrderStatus } from "@prisma/client";
 import { cookies } from "next/headers";
 
 // server action (только post запросы без ответа)
+// TODO не особо понял его объяснение, нужно детальнее изучить вопрос серверных экшенов
 export async function createOrder(data: CheckoutFormValues) {
   try {
     const cookieStore = cookies();
@@ -60,7 +63,7 @@ export async function createOrder(data: CheckoutFormValues) {
       },
     });
 
-    /* Очищаем корзину */
+    /* Очищаем корзину (стоимоость и все элементы) */
     await prisma.cart.update({
       where: {
         id: userCart.id,
@@ -69,22 +72,11 @@ export async function createOrder(data: CheckoutFormValues) {
         totalAmount: 0,
       },
     });
-
     await prisma.cartItem.deleteMany({
       where: {
         cartId: userCart.id,
       },
     });
-
-    // const paymentData = await createPayment({
-    //   amount: order.totalAmount,
-    //   orderId: order.id,
-    //   description: "Оплата заказа #" + order.id,
-    // });
-
-    // if (!paymentData) {
-    //   throw new Error("Payment data not found");
-    // }
 
     await prisma.order.update({
       where: {
@@ -95,19 +87,22 @@ export async function createOrder(data: CheckoutFormValues) {
       },
     });
 
-    // const paymentUrl = paymentData.confirmation.confirmation_url;
+    const paymentUrl = "paymentData.confirmation.confirmation_url";
 
-    // await sendEmail(
-    //   data.email,
-    //   "Next Pizza / Оплатите заказ #" + order.id,
-    //   PayOrderTemplate({
-    //     orderId: order.id,
-    //     totalAmount: order.totalAmount,
-    //     paymentUrl,
-    //   })
-    // );
+    await sendEmail(
+      data.email,
+      "Next Pizza / Оплатите заказ #" + order.id,
+      PayOrderTemplate({
+        orderId: order.id,
+        totalAmount: order.totalAmount,
+        paymentUrl,
+      })
+    );
 
-    return "https://nextjs.org/docs/app/building-your-application/rendering/server-components#static-rendering-default";
+    // TODO потом подразобраться с ссылкой из сервер экшена, чтобы она редиректила на главный сайт при оплате
+    // юкассы не будет, я в рот ебал в ней регаться, похуйпохуйпохуй
+    // TODO В будущем хочу потом сделать админку, чтобы все заказы там отображались и статус в ЛК юзера
+    return "url";
   } catch (err) {
     console.log("[CreateOrder] Server error", err);
   }

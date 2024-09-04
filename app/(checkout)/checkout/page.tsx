@@ -1,13 +1,13 @@
 "use client";
 
-import { Container } from "@/shared/components/widgets";
+import { Container, Title } from "@/shared/components/widgets";
 import {
   CheckoutAddressForm,
   CheckoutCart,
   CheckoutPersonalForm,
 } from "@/shared/components/widgets/checkout";
 import { CheckoutSidebar } from "@/shared/components/widgets/checkout-sidebar";
-import { Title } from "@/shared/components/widgets/title";
+
 import { useCart } from "@/shared/hooks/use-cart";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -18,15 +18,20 @@ import {
 } from "@/shared/constants/checkout-form-schema";
 import { createOrder } from "@/app/actions";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
+// TODO Добавить промокоды, Добавить разные налоги в зависимости от города
+// TODO Можно ещё работу с формой перенести в отдельный хук (но хз)
 export default function CheckoutPage() {
-  const [submitting, setSubmitting] = useState(false);
+  const router = useRouter();
   const { totalAmount, updateItemQuantity, items, removeCartItem, loading } =
     useCart();
-  // const { data: session } = useSession();
+
+  const [submitting, setSubmitting] = useState(false);
 
   const form = useForm<CheckoutFormValues>({
     resolver: zodResolver(checkoutFormSchema),
+    // TODO вывести default value в отдельный объект (в контанты), и чтобы он типизировался от CheckoutFormValues
     defaultValues: {
       email: "",
       firstName: "",
@@ -56,12 +61,15 @@ export default function CheckoutPage() {
     try {
       console.log(data);
       setSubmitting(true);
+      // Триггерим серверный экшен
       const url = await createOrder(data);
       toast.error("Заказ успешно оформлен! 📝 Переход на оплату... ", {
         icon: "✅",
       });
       if (url) {
-        location.href = url;
+        const timeout = setTimeout(() => {
+          router.push("/");
+        }, 2000);
       }
     } catch (err) {
       console.log(err);
@@ -72,6 +80,7 @@ export default function CheckoutPage() {
     }
   };
 
+  // TODO Вынести в useCart (повторяется в двух местах)
   const onClickCountButton = (
     id: number,
     quantity: number,
@@ -99,11 +108,9 @@ export default function CheckoutPage() {
                 items={items}
                 loading={loading}
               />
-
               <CheckoutPersonalForm
                 className={loading ? "opacity-40 pointer-events-none" : ""}
               />
-
               <CheckoutAddressForm
                 className={loading ? "opacity-40 pointer-events-none" : ""}
               />
@@ -113,6 +120,7 @@ export default function CheckoutPage() {
             <div className="w-[450px]">
               <CheckoutSidebar
                 totalAmount={totalAmount}
+                // TODO попробовать заюзать isSubmiting из r-h-f
                 loading={loading || submitting}
               />
             </div>

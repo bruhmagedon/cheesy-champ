@@ -8,17 +8,27 @@ import { cn } from "@/shared/lib/utils";
 const VAT = 15; //Налог
 const DELIVERY_PRICE = 250; //Стоимость доставки
 
-interface Props {
+interface CheckoutSidebarProps {
   totalAmount: number;
   loading?: boolean;
   className?: string;
 }
 
-export const CheckoutSidebar: React.FC<Props> = ({
+/**
+ * Компонент боковой панели оформления заказа.
+ * Отображает итоговую стоимость заказа, включая налог и доставку.
+ *
+ * @param {Object} props - Свойства компонента.
+ * @param {number} props.totalAmount - Сумма корзины.
+ * @param {boolean} [props.loading] - Флаг, указывающий на состояние загрузки. Если true, показываются скелетоны.
+ * @param {string} [props.className] - Дополнительный CSS-класс для кастомизации стилей компонента.
+ * @returns {JSX.Element} Компонент боковой панели оформления заказа.
+ */
+export const CheckoutSidebar = ({
   totalAmount,
   loading,
   className,
-}) => {
+}: CheckoutSidebarProps) => {
   const vatPrice = (totalAmount * VAT) / 100;
   const totalPrice = totalAmount + DELIVERY_PRICE + vatPrice; //Общая стоимость
 
@@ -26,6 +36,7 @@ export const CheckoutSidebar: React.FC<Props> = ({
     <WhiteBlock className={cn("p-6 sticky top-4", className)}>
       <div className="flex flex-col gap-1">
         <span className="text-xl">Итого:</span>
+        {/* TODO хочу попробовать реализовать скелетон по другому, чтобы для каждого поля не прописывать проверку */}
         {loading ? (
           <Skeleton className="h-11 w-48" />
         ) : (

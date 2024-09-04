@@ -17,11 +17,13 @@ export const CheckoutAddressForm: React.FC<Props> = ({ className }) => {
   return (
     <WhiteBlock title="3. Адрес доставки" className={className}>
       <div className="flex flex-col gap-5">
+        {/* Регистрация инпута если это проблематичено в компоненте*/}
         <Controller
           control={control}
           name="address"
           render={({ field, fieldState }) => (
             <>
+              {/* TODO ошибку хочется перенести на уровень компонента AdressInput */}
               <AdressInput onChange={field.onChange} />
               {fieldState.error?.message && (
                 <ErrorText text={fieldState.error.message} />

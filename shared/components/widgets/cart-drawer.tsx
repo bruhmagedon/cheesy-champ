@@ -9,15 +9,15 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/shared/components/ui/sheet";
+} from "@/shared/components/ui/sheet/sheet";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "../ui/button/button";
 import Link from "next/link";
 import Image from "next/image";
 import { CartDrawerItem } from "./cart-drawer-item";
 import { getCartItemDetails } from "@/shared/lib/get-cart-item-details";
 import { PizzaSize, PizzaType } from "@/shared/constants/pizza";
-import { Title } from "./title";
+import { Title } from "../ui/title/title";
 import { useCart } from "@/shared/hooks/use-cart";
 
 interface CartDrawerProps {

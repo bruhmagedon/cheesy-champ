@@ -1,16 +1,17 @@
 "use client";
 import { cn } from "@/shared/lib/utils";
 import Image from "next/image";
-import { Container } from "./container";
+import { Container } from "../container/container";
 import Link from "next/link";
-import { SearchInput } from "./search-input";
-import { CardButton } from "./cart-button";
+import { SearchInput } from "../search-input";
+import { CardButton } from "../cart-button";
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { redirect, useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
-import { useSession } from "next-auth/react";
-import { ProfileButton } from "./profile-button";
-import { AuthModal } from "./modals/auth-modal";
+import { ProfileButton } from "../profile-button";
+import { AuthModal } from "../modals/auth-modal";
+import { useSession, signIn } from "next-auth/react";
+import { Button } from "../../ui";
 
 interface HeaderProps {
   hasSearch?: boolean;
@@ -54,6 +55,7 @@ export const Header = ({
       <Container className="flex items-center justify-between py-8">
         {/* Левая часть */}
         <Link href="/">
+          {/* Логотип сайта */}
           <div className="flex items-center gap-4">
             <Image src="/logo.png" alt="Logo" width={35} height={35} />
             <div>
@@ -77,9 +79,7 @@ export const Header = ({
             open={openAuthModal}
             onClose={() => setOpenAuthModal(false)}
           />
-
           <ProfileButton onClickSignIn={() => setOpenAuthModal(true)} />
-
           {hasCart && <CardButton />}
         </div>
       </Container>

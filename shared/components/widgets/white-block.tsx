@@ -1,5 +1,5 @@
 import React from "react";
-import { Title } from "./title";
+import { Title } from "../ui/title/title";
 import { cn } from "@/shared/lib/utils";
 
 interface Props {

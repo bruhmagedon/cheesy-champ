@@ -1,14 +1,15 @@
 import { Nunito } from "next/font/google";
+import { Providers } from "@/shared/components/widgets/providers/providers";
 import "./globals.css";
-import { Providers } from "@/shared/components/widgets/providers";
 
-// самый главный лэйаут
+// Установка шрифта, задание переменной для него
 const nunito = Nunito({
   subsets: ["cyrillic"],
   variable: "--font-nunito",
   weight: ["400", "500", "600", "700", "800", "900"],
 });
 
+// Самый главный лэйаут
 export default function RootLayout({
   children,
 }: Readonly<{

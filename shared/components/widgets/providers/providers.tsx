@@ -9,8 +9,8 @@ export const Providers: React.FC<React.PropsWithChildren> = ({ children }) => {
   return (
     <>
       <SessionProvider>{children}</SessionProvider>
-      <Toaster />
-      <NextTopLoader />
+      <Toaster /> {/*  notifications */}
+      <NextTopLoader /> {/* Бар загрузки */}
     </>
   );
 };

@@ -1,7 +1,7 @@
 "use client";
 import { cn } from "@/shared/lib/utils";
 import { PizzaImage } from "./pizza-image";
-import { Title } from "./title";
+import { Title } from "../ui/title/title";
 import { Button } from "../ui";
 import { GroupVariants } from "./group-variants";
 import {
@@ -14,7 +14,7 @@ import { useState } from "react";
 import { Ingredient, ProductVariantion } from "@prisma/client";
 import { IngredientItem } from "./ingredient-item";
 import { useSet } from "react-use";
-import { DialogTitle } from "../ui/dialog";
+import { DialogTitle } from "../ui/dialog/dialog";
 import { getPizzaDetails } from "@/shared/lib/get-pizza-details";
 import { usePizzaOptions } from "@/shared/hooks/use-pizza-options";
 

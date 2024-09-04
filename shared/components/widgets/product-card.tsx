@@ -1,6 +1,6 @@
 import { cn } from "@/shared/lib/utils";
 import Link from "next/link";
-import { Title } from "./title";
+import { Title } from "../ui/title/title";
 import { Button } from "../ui";
 import { Plus } from "lucide-react";
 import { Ingredient } from "@prisma/client";

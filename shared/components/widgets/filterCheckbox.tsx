@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Checkbox } from "../ui/checkbox";
+import { Checkbox } from "../ui/checkbox/checkbox";
 
 export interface FilterChecboxProps {
   text: string;

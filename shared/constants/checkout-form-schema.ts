@@ -13,4 +13,5 @@ export const checkoutFormSchema = z.object({
   comment: z.string().optional(),
 });
 
+// Типы полей формы
 export type CheckoutFormValues = z.infer<typeof checkoutFormSchema>;

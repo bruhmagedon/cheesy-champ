@@ -10,6 +10,7 @@ interface TitleProps {
 }
 
 export const Title = ({ text, size = "sm", className }: TitleProps) => {
+  // Парметры в зависимости от пропсов
   const mapTagBySize = {
     xs: "h5",
     sm: "h4",
@@ -18,7 +19,7 @@ export const Title = ({ text, size = "sm", className }: TitleProps) => {
     xl: "h1",
     "2xl": "h1",
     p: "p",
-  } as const;
+  } as const; //const = только для чтения
 
   const mapClassNameBySize = {
     xs: "text-[16px]",
@@ -30,9 +31,9 @@ export const Title = ({ text, size = "sm", className }: TitleProps) => {
     p: "",
   } as const;
 
-  return React.createElement(
-    mapTagBySize[size],
-    { className: clsx(mapClassNameBySize[size], className) },
-    text
+  const Comp = mapTagBySize[size];
+
+  return (
+    <Comp className={clsx(mapClassNameBySize[size], className)}>{text}</Comp>
   );
 };
